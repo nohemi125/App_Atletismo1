@@ -61,6 +61,10 @@ public class cls_participantes {
     public void setInt_estado(int int_estado) {
         this.int_estado = int_estado;
     }
+
+    public String getStr_contacto() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
      
      
 }

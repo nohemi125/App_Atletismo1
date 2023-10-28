@@ -1,9 +1,16 @@
 
 package Vistas;
 
-
+import Modelo.cls_competencia;
+import Modelo.cls_participantes;
+import java.util.LinkedList;
+import javax.swing.JOptionPane;
 public class frm_competencia extends javax.swing.JFrame {
-
+  LinkedList<cls_competencia> objCompetencia = new LinkedList<>();
+  LinkedList<cls_participantes> objParticipantes = new LinkedList<>();
+  boolean bln_sw_participantes;
+  int int_posicion_participantes;
+  
     
     public frm_competencia() {
         initComponents();
@@ -30,10 +37,13 @@ public class frm_competencia extends javax.swing.JFrame {
         cbx_nivel = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         btn_actualizar = new javax.swing.JButton();
-        btn_agregar = new javax.swing.JButton();
+        btn_nuevo = new javax.swing.JButton();
         btn_consultar = new javax.swing.JButton();
         btn_guardar = new javax.swing.JButton();
+        lbl_estado = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -112,20 +122,20 @@ public class frm_competencia extends javax.swing.JFrame {
         btn_actualizar.setBackground(new java.awt.Color(255, 255, 255));
         btn_actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/actualizado.png"))); // NOI18N
         btn_actualizar.setText("Actualizar");
-        btn_actualizar.setBorder(null);
+        btn_actualizar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btn_actualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_actualizarActionPerformed(evt);
             }
         });
 
-        btn_agregar.setBackground(new java.awt.Color(255, 255, 255));
-        btn_agregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar-archivo.png"))); // NOI18N
-        btn_agregar.setText("Agregar");
-        btn_agregar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btn_agregar.addActionListener(new java.awt.event.ActionListener() {
+        btn_nuevo.setBackground(new java.awt.Color(255, 255, 255));
+        btn_nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar-archivo.png"))); // NOI18N
+        btn_nuevo.setText("Nuevo");
+        btn_nuevo.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btn_nuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_agregarActionPerformed(evt);
+                btn_nuevoActionPerformed(evt);
             }
         });
 
@@ -133,6 +143,11 @@ public class frm_competencia extends javax.swing.JFrame {
         btn_consultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/consulta (1).png"))); // NOI18N
         btn_consultar.setText("Consultar");
         btn_consultar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btn_consultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_consultarActionPerformed(evt);
+            }
+        });
 
         btn_guardar.setBackground(new java.awt.Color(255, 255, 255));
         btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/disquete.png"))); // NOI18N
@@ -144,6 +159,9 @@ public class frm_competencia extends javax.swing.JFrame {
             }
         });
 
+        lbl_estado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_estado.setText("Estado:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -152,6 +170,7 @@ public class frm_competencia extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_estado, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
@@ -167,7 +186,7 @@ public class frm_competencia extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btn_agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_actualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btn_consultar))
@@ -198,7 +217,7 @@ public class frm_competencia extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btn_actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_agregar)
+                        .addComponent(btn_nuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,40 +229,55 @@ public class frm_competencia extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_contacto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
+                .addComponent(lbl_estado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
+
+        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("la paciencia y la persistencia son tus aliados \nen el viaje de la programacion.\nla linea de error no es un obstaculo , es una leccion \ninvaluable en el camino hacia el dominio de la programacion;\n");
+        jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(164, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 32, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pack();
@@ -257,13 +291,52 @@ public class frm_competencia extends javax.swing.JFrame {
       
     }//GEN-LAST:event_btn_actualizarActionPerformed
 
-    private void btn_agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregarActionPerformed
-        
-    }//GEN-LAST:event_btn_agregarActionPerformed
+    private void btn_nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nuevoActionPerformed
+    txt_contacto.setText("");
+    txt_edad.setText("");
+    txt_id.setText("");
+    txt_nombre.setText("");
+    cbx_nivel.setSelectedIndex(0);
+    txt_id.requestFocus();
+    }//GEN-LAST:event_btn_nuevoActionPerformed
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
+    if (Integer.parseInt(txt_edad.getText())>=18){
+     int int_pos=objParticipantes.size();
+     objParticipantes.add(new cls_participantes(
+     txt_id.getText(),
+     txt_nombre.getText(),
+     Integer.parseInt(txt_edad.getText()),
+     (String)cbx_nivel.getSelectedItem(),
+     txt_contacto.getText())); 
+     JOptionPane.showMessageDialog(null,"Participante Registrado "+ "Con exito", "Guardar",JOptionPane.INFORMATION_MESSAGE);
+    }else {
+        JOptionPane.showMessageDialog(null, " no cumples con la edad "+ "Requeridad", "Guardar",JOptionPane.ERROR);
         
+     }        
     }//GEN-LAST:event_btn_guardarActionPerformed
+
+    private void btn_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultarActionPerformed
+        int_posicion_participantes = 0;
+        bln_sw_participantes = false;
+        for(int i=0; i < objParticipantes.size(); i++){
+            if(txt_id.getText().equals(objParticipantes.get(i).getStr_id())){
+                bln_sw_participantes = true;
+                int_posicion_participantes = i;
+                break;
+            }
+        }
+        if(bln_sw_participantes == false){
+            JOptionPane.showMessageDialog(null, "No se encontaron " + "registros", "Consultar", JOptionPane.ERROR_MESSAGE);
+        }else{
+       txt_contacto.setText(objParticipantes.get(int_posicion_participantes).getStr_contacto());
+       txt_edad.setText(""+objParticipantes.get(int_posicion_participantes).getInt_edad());
+       txt_nombre.setText(objParticipantes.get(int_posicion_participantes).getStr_nombre());
+       cbx_nivel.setSelectedItem(""+objParticipantes.get(int_posicion_participantes).getStr_nivel());
+       lbl_estado.setText(""+objParticipantes.get(int_posicion_participantes).getInt_estado());
+    }
+
+    }//GEN-LAST:event_btn_consultarActionPerformed
 
    
     public static void main(String args[]) {
@@ -300,9 +373,9 @@ public class frm_competencia extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_actualizar;
-    private javax.swing.JButton btn_agregar;
     private javax.swing.JButton btn_consultar;
     private javax.swing.JButton btn_guardar;
+    private javax.swing.JButton btn_nuevo;
     private javax.swing.JComboBox<String> cbx_nivel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -315,6 +388,9 @@ public class frm_competencia extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lbl_estado;
     private javax.swing.JTextField txt_contacto;
     private javax.swing.JTextField txt_edad;
     private javax.swing.JTextField txt_id;
